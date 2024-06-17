@@ -1,0 +1,13 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "database": "${workspaceFolder:SweatSheet}/SweatSheet.Server/workouts.db",
+            "name": "workouts"
+        }
+    ],
+    "sqltools.useNodeRuntime": true,
+    "typescript.preferences.importModuleSpecifier": "non-relative",
+    "javascript.preferences.importModuleSpecifier": "non-relative",
+}

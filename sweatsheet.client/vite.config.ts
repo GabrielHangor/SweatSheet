@@ -1,0 +1,67 @@
+import { defineConfig } from "vite";
+import plugin from "@vitejs/plugin-vue";
+import fs from "fs";
+import path from "path";
+import child_process from "child_process";
+import { env } from "process";
+
+import VueDevTools from "vite-plugin-vue-devtools";
+
+const baseFolder =
+  env.APPDATA !== undefined && env.APPDATA !== ""
+    ? `${env.APPDATA}/ASP.NET/https`
+    : `${env.HOME}/.aspnet/https`;
+
+const certificateName = "sweatsheet.client";
+const certFilePath = path.join(baseFolder, `${certificateName}.pem`);
+const keyFilePath = path.join(baseFolder, `${certificateName}.key`);
+
+if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
+  if (
+    0 !==
+    child_process.spawnSync(
+      "dotnet",
+      ["dev-certs", "https", "--export-path", certFilePath, "--format", "Pem", "--no-password"],
+      { stdio: "inherit" },
+    ).status
+  ) {
+    throw new Error("Could not create certificate.");
+  }
+}
+
+const target = env.ASPNETCORE_HTTPS_PORT
+  ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}`
+  : env.ASPNETCORE_URLS
+    ? env.ASPNETCORE_URLS.split(";")[0]
+    : "https://localhost:7038";
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [
+    plugin(),
+    // VueDevTools(),
+  ],
+  resolve: {
+    alias: {
+      "@workouts": path.resolve(`${path.resolve(__dirname, "./src/modules/workouts")}`),
+      "@exercises": path.resolve(`${path.resolve(__dirname, "./src/modules/exercises")}`),
+      "@shared": path.resolve(`${path.resolve(__dirname, "./src/modules/shared")}`),
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+  server: {
+    host: "0.0.0.0",
+    proxy: {
+      "^/api/v1": {
+        target,
+        secure: false,
+      },
+    },
+    port: 5173,
+    https: {
+      key: fs.readFileSync(keyFilePath),
+      cert: fs.readFileSync(certFilePath),
+    },
+  },
+});
+
