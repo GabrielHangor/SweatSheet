@@ -1,4 +1,6 @@
-﻿namespace SweatSheet.Server;
+﻿using SweatSheet.Server.Modules.Workouts.Entities;
+
+namespace SweatSheet.Server.Modules.Workouts.DTOs;
 
 public class WorkoutActivityRequestDto
 {

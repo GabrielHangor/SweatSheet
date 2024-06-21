@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SweatSheet.Server;
+namespace SweatSheet.Server.Modules.Workouts.Entities;
 
 public class ActivitySet
 {
@@ -12,7 +12,7 @@ public class WorkoutActivity
 {
     [Key]
     public int Id { get; set; }
-    public Exercise? Exercise { get; set; }
+    public Exercise.Entities.Exercise? Exercise { get; set; }
     public List<ActivitySet> Sets { get; set; } = [];
     public double TotalWeightActivity
     {

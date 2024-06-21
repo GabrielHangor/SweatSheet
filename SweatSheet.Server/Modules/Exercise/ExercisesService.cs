@@ -2,8 +2,9 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SweatSheet.Server.Modules.Exercise.DTOs;
 
-namespace SweatSheet.Server;
+namespace SweatSheet.Server.Modules.Exercise;
 
 public class ExercisesService
 {
@@ -16,18 +17,18 @@ public class ExercisesService
         _mapper = mapper;
     }
 
-    public async Task<Ok<List<Exercise>>> GetExercises()
+    public async Task<Ok<List<Entities.Exercise>>> GetExercises()
     {
         var exercises = await _dbContext.Exercises.ToListAsync();
 
         return TypedResults.Ok(exercises);
     }
 
-    public async Task<Results<Ok<Exercise>, ValidationProblem>> CreateExercise(
+    public async Task<Results<Ok<Entities.Exercise>, ValidationProblem>> CreateExercise(
         ExerciseCreateRequestDto exercisetDto
     )
     {
-        var newExercise = _mapper.Map<Exercise>(exercisetDto);
+        var newExercise = _mapper.Map<Entities.Exercise>(exercisetDto);
 
         _dbContext.Exercises.Add(newExercise);
 
@@ -51,7 +52,7 @@ public class ExercisesService
         return TypedResults.NotFound("Exercise not found");
     }
 
-    public async Task<Results<Ok<Exercise>, NotFound<string>, ValidationProblem>> UpdateExercise(
+    public async Task<Results<Ok<Entities.Exercise>, NotFound<string>, ValidationProblem>> UpdateExercise(
         [FromRoute] int id,
         ExerciseUpdateRequestDto exerciseDto
     )

@@ -1,4 +1,6 @@
-﻿namespace SweatSheet.Server;
+﻿using SweatSheet.Server.Modules.Exercise.Enums;
+
+namespace SweatSheet.Server.Modules.Exercise.DTOs;
 
 public class ExerciseCreateRequestDto
 {

@@ -1,4 +1,4 @@
-﻿namespace SweatSheet.Server;
+﻿namespace SweatSheet.Server.Modules.Workouts.DTOs;
 
 public class WorkoutRequestDto
 {

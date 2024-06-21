@@ -1,9 +1,15 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SweatSheet.Server.Modules.Auth.Entities;
+using SweatSheet.Server.Modules.Shared.Generics;
+using SweatSheet.Server.Modules.Workouts.DTOs;
+using SweatSheet.Server.Modules.Workouts.Entities;
 
-namespace SweatSheet.Server;
+namespace SweatSheet.Server.Modules.Workouts;
 
 public class WorkoutsService
 {
@@ -16,30 +22,41 @@ public class WorkoutsService
         _mapper = mapper;
     }
 
-    public async Task<Ok<PaginatedList<Workout>>> GetWorkouts(
+    public async Task<IResult> GetWorkouts(
+        ClaimsPrincipal principal,
+        UserManager<ApplicationUser> userManager,
         [FromQuery] int page = 1,
         [FromQuery] int size = 10
     )
     {
-        var workouts = await PaginatedList<Workout>.ToPagedList(
-            _dbContext.Workouts
-                .AsNoTracking()
-                .OrderBy(w => w.StartTime)
-                .Include(w => w.Activities)
-                .ThenInclude(a => a.Exercise),
-            page,
-            size
-        );
+        var userId = userManager.GetUserId(principal);
 
-        return TypedResults.Ok(workouts);
-    }
-
-    public async Task<Results<Ok<Workout>, NotFound>> GetSingleWorkout([FromRoute] int id)
-    {
-        var workout = await _dbContext.Workouts
-            .AsNoTracking()
+        var userWorkoutsQuery = _dbContext.Users
+            .Where(u => u.Id == userId)
+            .SelectMany(u => u.Workouts)
+            .OrderBy(w => w.StartTime)
             .Include(w => w.Activities)
             .ThenInclude(a => a.Exercise)
+            .AsNoTracking();
+
+        var paginatedWorkouts = await PaginatedList<Workout>.ToPagedListAsync(userWorkoutsQuery, page, size);
+
+        return TypedResults.Ok(paginatedWorkouts);
+    }
+
+    public async Task<IResult> GetSingleWorkout(
+        ClaimsPrincipal principal,
+        UserManager<ApplicationUser> userManager,
+        [FromRoute] int id
+    )
+    {
+        var userId = userManager.GetUserId(principal);
+
+        var workout = await _dbContext.Workouts
+            .Where(w => w.User.Id == userId)
+            .Include(w => w.Activities)
+            .ThenInclude(a => a.Exercise)
+            .AsNoTracking()
             .FirstOrDefaultAsync(w => w.Id == id);
 
         if (workout != null)
@@ -47,16 +64,26 @@ public class WorkoutsService
             return TypedResults.Ok(workout);
         }
 
-        return TypedResults.NotFound();
+        return TypedResults.Forbid();
     }
 
-    public async Task<Results<Ok<Workout>, ValidationProblem>> CreateWorkout(
+    public async Task<IResult> CreateWorkout(
+        ClaimsPrincipal principal,
+        UserManager<ApplicationUser> userManager,
         WorkoutRequestDto workoutRequestDto
     )
     {
-        var newWorkout = _mapper.Map<Workout>(workoutRequestDto);
+        var user = await userManager.GetUserAsync(principal);
 
-        newWorkout.EndTime = new DateTime();
+        if (user == null)
+        {
+            return Results.Unauthorized();
+        }
+
+        var newWorkout = _mapper.Map<Workout>(workoutRequestDto);
+        newWorkout.User = user;
+
+        newWorkout.EndTime = DateTime.Now;
 
         foreach (var activityDto in workoutRequestDto.Activities)
         {
@@ -75,15 +102,22 @@ public class WorkoutsService
         return TypedResults.Ok(newWorkout);
     }
 
-    public async Task<Results<Ok, NotFound>> DeleteWorkout([FromRoute] int id)
+    public async Task<IResult> DeleteWorkout(
+        ClaimsPrincipal principal,
+        UserManager<ApplicationUser> userManager,
+        [FromRoute] int id
+    )
     {
+        var userId = userManager.GetUserId(principal);
+
         var workoutToDelete = await _dbContext.Workouts
+            .Where(w => w.User.Id == userId)
             .Include(w => w.Activities)
             .FirstOrDefaultAsync(w => w.Id == id);
 
         if (workoutToDelete == null)
         {
-            return TypedResults.NotFound();
+            return TypedResults.Forbid();
         }
 
         _dbContext.Workouts.Remove(workoutToDelete);
@@ -93,6 +127,8 @@ public class WorkoutsService
     }
 
     public async Task<Results<Ok<Workout>, NotFound, ValidationProblem>> UpdateWorkout(
+        ClaimsPrincipal principal,
+        UserManager<ApplicationUser> userManager,
         [FromRoute] int id,
         WorkoutRequestDto workoutDto
     )
@@ -119,7 +155,6 @@ public class WorkoutsService
                 ?? throw new InvalidOperationException("Exercise not found.");
 
             var activity = _mapper.Map<WorkoutActivity>(activityDto);
-
             activity.Exercise = exercise;
 
             workoutToUpdate.Activities.Add(activity);

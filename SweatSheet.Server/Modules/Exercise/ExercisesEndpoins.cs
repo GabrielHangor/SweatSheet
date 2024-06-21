@@ -1,4 +1,7 @@
-﻿namespace SweatSheet.Server;
+﻿using SweatSheet.Server.Modules.Exercise.DTOs;
+using SweatSheet.Server.Modules.Shared.Generics;
+
+namespace SweatSheet.Server.Modules.Exercise;
 
 public static class ExercisesEndpoints
 {

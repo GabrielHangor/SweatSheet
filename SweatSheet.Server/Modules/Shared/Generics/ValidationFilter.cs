@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace SweatSheet.Server;
+namespace SweatSheet.Server.Modules.Shared.Generics;
 
 public class ValidationFilter<T> : IEndpointFilter
 {

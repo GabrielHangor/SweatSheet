@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SweatSheet.Server;
+namespace SweatSheet.Server.Modules.Exercise.Enums;
 
 public enum MuscleGroup
 {

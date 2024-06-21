@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+namespace SweatSheet.Server.Modules.Shared.Generics;
+
 public class PaginatedList<T>
 {
     public List<T> Items { get; private set; }
@@ -20,7 +22,11 @@ public class PaginatedList<T>
         Items = items;
     }
 
-    public static async Task<PaginatedList<T>> ToPagedList(IQueryable<T> source, int pageNumber, int pageSize)
+    public static async Task<PaginatedList<T>> ToPagedListAsync(
+        IQueryable<T> source,
+        int pageNumber,
+        int pageSize
+    )
     {
         var count = await source.CountAsync();
         var items = await source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();

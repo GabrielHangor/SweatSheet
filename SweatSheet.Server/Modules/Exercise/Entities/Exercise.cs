@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using SweatSheet.Server.Modules.Exercise.Enums;
 
-namespace SweatSheet.Server
+namespace SweatSheet.Server.Modules.Exercise.Entities
 {
     public class Exercise
     {

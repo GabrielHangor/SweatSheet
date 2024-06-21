@@ -1,7 +1,8 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using SweatSheet.Server.Modules.Workouts.DTOs;
 
-namespace SweatSheet.Server;
+namespace SweatSheet.Server.Modules.Workouts.EndpointValidators;
 
 public class ActivityValidator : AbstractValidator<WorkoutActivityRequestDto>
 {
