@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 using SweatSheet.Server.Modules.Auth.Entities;
 
 namespace SweatSheet.Server.Modules.Workouts.Entities;
@@ -26,6 +25,5 @@ public class Workout
 
     public List<WorkoutActivity> Activities { get; init; } = [];
 
-    [JsonIgnore]
     public  ApplicationUser User { get; set; }
 }

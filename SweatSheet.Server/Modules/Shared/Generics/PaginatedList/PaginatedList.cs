@@ -1,19 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace SweatSheet.Server.Modules.Shared.Generics;
+namespace SweatSheet.Server.Modules.Shared.Generics.PaginatedList;
 
 public class PaginatedList<T>
 {
-    public List<T> Items { get; private set; }
-    public int CurrentPage { get; private set; }
-    public int TotalPages { get; private set; }
-    public int PageSize { get; private set; }
-    public int TotalCount { get; private set; }
+    public List<T> Items { get; set; }
+    public int CurrentPage { get; set; }
+    public int TotalPages { get; set; }
+    public int PageSize { get; set; }
+    public int TotalCount { get; set; }
 
     public bool HasPrevious => CurrentPage > 1;
     public bool HasNext => CurrentPage < TotalPages;
 
-    private PaginatedList(List<T> items, int count, int pageNumber, int pageSize)
+    public PaginatedList(List<T> items, int count, int pageNumber, int pageSize)
     {
         TotalCount = count;
         PageSize = pageSize;

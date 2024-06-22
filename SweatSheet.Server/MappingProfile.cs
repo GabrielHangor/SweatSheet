@@ -10,6 +10,7 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
+        CreateMap<Workout, WorkoutDto>();
         CreateMap<WorkoutRequestDto, Workout>().ForMember(w => w.Activities, opt => opt.Ignore());
         CreateMap<WorkoutActivityRequestDto, WorkoutActivity>();
         CreateMap<ExerciseCreateRequestDto, Exercise>();

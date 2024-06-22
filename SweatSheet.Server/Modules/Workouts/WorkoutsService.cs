@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SweatSheet.Server.Modules.Auth.Entities;
-using SweatSheet.Server.Modules.Shared.Generics;
+using SweatSheet.Server.Modules.Shared.Generics.PaginatedList;
 using SweatSheet.Server.Modules.Workouts.DTOs;
 using SweatSheet.Server.Modules.Workouts.Entities;
 
@@ -41,7 +41,9 @@ public class WorkoutsService
 
         var paginatedWorkouts = await PaginatedList<Workout>.ToPagedListAsync(userWorkoutsQuery, page, size);
 
-        return TypedResults.Ok(paginatedWorkouts);
+        var workoutDtos = paginatedWorkouts.Map<Workout, WorkoutDto>(_mapper);
+
+        return TypedResults.Ok(workoutDtos);
     }
 
     public async Task<IResult> GetSingleWorkout(
@@ -59,12 +61,11 @@ public class WorkoutsService
             .AsNoTracking()
             .FirstOrDefaultAsync(w => w.Id == id);
 
-        if (workout != null)
-        {
-            return TypedResults.Ok(workout);
-        }
+        if (workout == null)
+            return TypedResults.Forbid();
 
-        return TypedResults.Forbid();
+        var workoutDto = _mapper.Map<WorkoutDto>(workout);
+        return TypedResults.Ok(workoutDto);
     }
 
     public async Task<IResult> CreateWorkout(
@@ -99,7 +100,9 @@ public class WorkoutsService
         _dbContext.Workouts.Add(newWorkout);
         await _dbContext.SaveChangesAsync();
 
-        return TypedResults.Ok(newWorkout);
+        var workoutDto = _mapper.Map<WorkoutDto>(newWorkout);
+
+        return TypedResults.Ok(workoutDto);
     }
 
     public async Task<IResult> DeleteWorkout(
