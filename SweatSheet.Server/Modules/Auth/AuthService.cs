@@ -1,6 +1,5 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using SweatSheet.Server.Modules.Auth.DTOs;
 using SweatSheet.Server.Modules.Auth.Entities;
 
@@ -74,8 +73,28 @@ public static class AuthService
         );
     }
 
-    public static async Task<IResult> ChangePassword(HttpContext context)
+    public static async Task<IResult> ChangePassword(
+        ChangePasswordDto dto,
+        ClaimsPrincipal principal,
+        UserManager<ApplicationUser> userManager
+    )
     {
-        throw new NotImplementedException();
+        var currentUser = await userManager.GetUserAsync(principal);
+
+        if (currentUser == null)
+        {
+            return Results.Unauthorized();
+        }
+
+        var newPasswordMatch = dto.NewPassword == dto.ConfirmPassword;
+
+        if (!newPasswordMatch)
+        {
+            return Results.BadRequest("Passwords do not match");
+        }
+
+        var result = await userManager.ChangePasswordAsync(currentUser, dto.OldPassword, dto.NewPassword);
+
+        return result.Succeeded ? Results.Ok() : Results.BadRequest(result.Errors);
     }
 }

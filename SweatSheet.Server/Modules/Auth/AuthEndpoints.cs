@@ -12,9 +12,9 @@ public static class AuthEndpoints
 
         authGroup.MapPost("/register", AuthService.Register);
 
-        authGroup.MapPost("/logout", AuthService.SignOut);
+        authGroup.MapPost("/logout", AuthService.SignOut).RequireAuthorization();
 
-        authGroup.MapPost("/changePassword", AuthService.ChangePassword);
+        authGroup.MapPost("/changePassword", AuthService.ChangePassword).RequireAuthorization();
 
         authGroup.MapGet("/adminRoute", () => Results.Ok("Admin route")).RequireAuthorization("admin");
     }
