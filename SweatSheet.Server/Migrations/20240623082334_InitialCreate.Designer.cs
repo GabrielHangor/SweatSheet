@@ -11,7 +11,7 @@ using SweatSheet.Server;
 namespace SweatSheet.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240621142405_InitialCreate")]
+    [Migration("20240623082334_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -150,13 +150,13 @@ namespace SweatSheet.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "a1259ab1-e5e1-44f4-880f-b349277089c5",
+                            Id = "dfb8d92f-5a8d-4243-8511-e991804321bd",
                             Name = "user",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "28a5da9e-f9bb-478e-a94a-4a7d482763d4",
+                            Id = "6b0a0c0f-a3ff-44cd-a27d-afea6db21792",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         });
@@ -242,6 +242,14 @@ namespace SweatSheet.Server.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Exercises");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ExerciseTitle = "Bench Press",
+                            PrimaryMuscleGroup = 0
+                        });
                 });
 
             modelBuilder.Entity("SweatSheet.Server.Modules.Workouts.Entities.Workout", b =>
@@ -286,7 +294,7 @@ namespace SweatSheet.Server.Migrations
                     b.Property<double>("TotalWeightActivity")
                         .HasColumnType("REAL");
 
-                    b.Property<int?>("WorkoutId")
+                    b.Property<int>("WorkoutId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -366,9 +374,11 @@ namespace SweatSheet.Server.Migrations
                         .WithMany()
                         .HasForeignKey("ExerciseId");
 
-                    b.HasOne("SweatSheet.Server.Modules.Workouts.Entities.Workout", null)
+                    b.HasOne("SweatSheet.Server.Modules.Workouts.Entities.Workout", "Workout")
                         .WithMany("Activities")
-                        .HasForeignKey("WorkoutId");
+                        .HasForeignKey("WorkoutId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.OwnsMany("SweatSheet.Server.Modules.Workouts.Entities.ActivitySet", "Sets", b1 =>
                         {
@@ -398,6 +408,8 @@ namespace SweatSheet.Server.Migrations
                     b.Navigation("Exercise");
 
                     b.Navigation("Sets");
+
+                    b.Navigation("Workout");
                 });
 
             modelBuilder.Entity("SweatSheet.Server.Modules.Auth.Entities.ApplicationUser", b =>

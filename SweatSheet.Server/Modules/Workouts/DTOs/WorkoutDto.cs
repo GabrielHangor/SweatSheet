@@ -9,5 +9,5 @@ public class WorkoutDto {
     public DateTime EndTime { get; set; }
     public int WorkoutDurationInSeconds { get; set; }
     public double TotalWeightWorkout { get; set; }
-    public List<WorkoutActivity> Activities { get; init; } = [];
+    public List<WorkoutActivityDto> Activities { get; init; } = [];
 }

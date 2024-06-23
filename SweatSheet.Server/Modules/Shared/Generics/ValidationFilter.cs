@@ -16,7 +16,7 @@ public class ValidationFilter<T> : IEndpointFilter
             return await next(context);
         }
 
-        var entity = ValidationFilter<T>.GetEntityToValidate(context);
+        var entity = GetEntityToValidate(context);
 
         if (entity == null)
         {

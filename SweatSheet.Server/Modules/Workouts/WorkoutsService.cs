@@ -37,7 +37,8 @@ public class WorkoutsService
             .OrderBy(w => w.StartTime)
             .Include(w => w.Activities)
             .ThenInclude(a => a.Exercise)
-            .AsNoTracking();
+            .AsNoTracking()
+            .AsSplitQuery();
 
         var paginatedWorkouts = await PaginatedList<Workout>.ToPagedListAsync(userWorkoutsQuery, page, size);
 
@@ -59,10 +60,13 @@ public class WorkoutsService
             .Include(w => w.Activities)
             .ThenInclude(a => a.Exercise)
             .AsNoTracking()
+            .AsSplitQuery()
             .FirstOrDefaultAsync(w => w.Id == id);
 
         if (workout == null)
-            return TypedResults.Forbid();
+        {
+            return TypedResults.NotFound();
+        }
 
         var workoutDto = _mapper.Map<WorkoutDto>(workout);
         return TypedResults.Ok(workoutDto);
@@ -116,6 +120,7 @@ public class WorkoutsService
         var workoutToDelete = await _dbContext.Workouts
             .Where(w => w.User.Id == userId)
             .Include(w => w.Activities)
+            .AsSplitQuery()
             .FirstOrDefaultAsync(w => w.Id == id);
 
         if (workoutToDelete == null)

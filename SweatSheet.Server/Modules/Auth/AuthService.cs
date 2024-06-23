@@ -68,7 +68,7 @@ public static class AuthService
             {
                 { "userName", currentUser.UserName ?? "" },
                 { "userId", currentUser.Id },
-                { "role", userRoles[0] }
+                { "role", userRoles.FirstOrDefault() ?? "" }
             }
         );
     }

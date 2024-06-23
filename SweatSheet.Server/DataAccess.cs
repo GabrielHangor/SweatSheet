@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SweatSheet.Server.Modules.Auth.Entities;
 using SweatSheet.Server.Modules.Exercise.Entities;
+using SweatSheet.Server.Modules.Exercise.Enums;
 using SweatSheet.Server.Modules.Workouts.Entities;
 
 namespace SweatSheet.Server;
@@ -34,7 +35,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
         modelBuilder.Entity<Workout>(entity =>
         {
             entity.HasIndex(w => w.Id);
-            entity.HasMany(w => w.Activities);
+            entity.HasMany(w => w.Activities).WithOne(a => a.Workout).OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder
@@ -46,6 +47,17 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
                     s.WithOwner().HasForeignKey("ActivityId");
                     s.Property("Id");
                     s.HasKey("Id");
+                }
+            );
+
+        modelBuilder
+            .Entity<Exercise>()
+            .HasData(
+                new Exercise
+                {
+                    Id = 1,
+                    ExerciseTitle = "Bench Press",
+                    PrimaryMuscleGroup = MuscleGroup.Chest
                 }
             );
     }

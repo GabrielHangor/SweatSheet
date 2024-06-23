@@ -24,6 +24,5 @@ public static class WorkoutEndpoints
         workoutsGroup
             .MapPut("/{id:int}", workoutsService.UpdateWorkout)
             .AddEndpointFilter<ValidationFilter<WorkoutRequestDto>>();
-        ;
     }
 }

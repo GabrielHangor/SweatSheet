@@ -201,8 +201,8 @@ namespace SweatSheet.Server.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     ExerciseId = table.Column<int>(type: "INTEGER", nullable: true),
-                    TotalWeightActivity = table.Column<double>(type: "REAL", nullable: false),
-                    WorkoutId = table.Column<int>(type: "INTEGER", nullable: true)
+                    WorkoutId = table.Column<int>(type: "INTEGER", nullable: false),
+                    TotalWeightActivity = table.Column<double>(type: "REAL", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -216,7 +216,8 @@ namespace SweatSheet.Server.Migrations
                         name: "FK_Activities_Workouts_WorkoutId",
                         column: x => x.WorkoutId,
                         principalTable: "Workouts",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -245,9 +246,14 @@ namespace SweatSheet.Server.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "28a5da9e-f9bb-478e-a94a-4a7d482763d4", null, "admin", "ADMIN" },
-                    { "a1259ab1-e5e1-44f4-880f-b349277089c5", null, "user", "USER" }
+                    { "6b0a0c0f-a3ff-44cd-a27d-afea6db21792", null, "admin", "ADMIN" },
+                    { "dfb8d92f-5a8d-4243-8511-e991804321bd", null, "user", "USER" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "Exercises",
+                columns: new[] { "Id", "ExerciseTitle", "PrimaryMuscleGroup" },
+                values: new object[] { 1, "Bench Press", 0 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Activities_ExerciseId",

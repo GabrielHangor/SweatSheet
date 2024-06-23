@@ -1,6 +1,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using SweatSheet.Server;
 using SweatSheet.Server.Modules.Auth;
 using SweatSheet.Server.Modules.Auth.Entities;
@@ -17,7 +18,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AppDbContext>(
-    options => options.UseSqlite("Data Source=workouts.db"),
+    options =>
+    {
+        options.UseSqlite("Data Source=workouts.db");
+    },
     ServiceLifetime.Singleton
 );
 

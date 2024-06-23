@@ -13,6 +13,7 @@ public class MappingProfile : Profile
         CreateMap<Workout, WorkoutDto>();
         CreateMap<WorkoutRequestDto, Workout>().ForMember(w => w.Activities, opt => opt.Ignore());
         CreateMap<WorkoutActivityRequestDto, WorkoutActivity>();
+        CreateMap<WorkoutActivity, WorkoutActivityDto>();
         CreateMap<ExerciseCreateRequestDto, Exercise>();
     }
 }
