@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace SweatSheet.Server;
+namespace SweatSheet.Server.Modules.Shared.Generics;
 
 public class ValidationFilter<T> : IEndpointFilter
 {
@@ -16,7 +16,7 @@ public class ValidationFilter<T> : IEndpointFilter
             return await next(context);
         }
 
-        var entity = ValidationFilter<T>.GetEntityToValidate(context);
+        var entity = GetEntityToValidate(context);
 
         if (entity == null)
         {

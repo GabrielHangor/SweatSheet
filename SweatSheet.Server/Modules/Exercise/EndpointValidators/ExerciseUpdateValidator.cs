@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
+using SweatSheet.Server.Modules.Exercise.DTOs;
 
-namespace SweatSheet.Server;
+namespace SweatSheet.Server.Modules.Exercise.EndpointValidators;
 
 public class ExerciseUpdateValidator : AbstractValidator<ExerciseUpdateRequestDto>
 {

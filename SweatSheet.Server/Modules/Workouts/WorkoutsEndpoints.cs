@@ -1,10 +1,13 @@
-﻿namespace SweatSheet.Server;
+﻿using SweatSheet.Server.Modules.Shared.Generics;
+using SweatSheet.Server.Modules.Workouts.DTOs;
+
+namespace SweatSheet.Server.Modules.Workouts;
 
 public static class WorkoutEndpoints
 {
     public static void RegisterWorkoutEndpoints(this WebApplication app)
     {
-        var workoutsGroup = app.MapGroup("/api/v1/workouts").WithTags("Workouts");
+        var workoutsGroup = app.MapGroup("/api/v1/workouts").WithTags("Workouts").RequireAuthorization();
 
         var workoutsService = app.Services.GetRequiredService<WorkoutsService>();
 
@@ -21,6 +24,5 @@ public static class WorkoutEndpoints
         workoutsGroup
             .MapPut("/{id:int}", workoutsService.UpdateWorkout)
             .AddEndpointFilter<ValidationFilter<WorkoutRequestDto>>();
-        ;
     }
 }
