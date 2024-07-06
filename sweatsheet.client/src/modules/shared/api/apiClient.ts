@@ -1,4 +1,4 @@
-import { toastController } from "@ionic/vue";
+import router from "@/router";
 import axios, { AxiosInstance, isAxiosError } from "axios";
 
 enum StatusCode {
@@ -17,7 +17,7 @@ export default abstract class ApiClient {
 
   protected readonly httpClient: AxiosInstance;
 
-  constructor(path: string, baseUrl = "/api/v1/", contentType = "application/json") {
+  protected constructor(path: string, baseUrl = "/api/v1/", contentType = "application/json") {
     const client = axios.create({
       baseURL: `${baseUrl}${path.startsWith("/") ? path.substring(1) : path}`,
       timeout: 30000,
@@ -42,31 +42,10 @@ export default abstract class ApiClient {
         switch (status) {
           case StatusCode.BadRequest: {
             const errors = error.response.data.errors as ValidationErrors;
-
-            const toast = await toastController.create({
-              cssClass: "toast-message",
-              message: Object.values(errors).join("\n"),
-              duration: 5000,
-              position: "top",
-              color: "danger",
-            });
-
-            await toast.present();
-
             break;
           }
 
           case StatusCode.InternalServerError: {
-            const toast = await toastController.create({
-              cssClass: "toast-message",
-              layout: "stacked",
-              message: "Internal Server Error",
-              duration: 5000,
-              position: "top",
-              color: "danger",
-            });
-
-            await toast.present();
             break;
           }
           case StatusCode.TooManyRequests: {
@@ -74,7 +53,7 @@ export default abstract class ApiClient {
             break;
           }
           case StatusCode.Unauthorized: {
-            // Handle Unauthorized
+            router.push({ name: "login" });
             break;
           }
         }

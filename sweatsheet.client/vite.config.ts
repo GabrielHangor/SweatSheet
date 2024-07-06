@@ -5,8 +5,6 @@ import path from "path";
 import child_process from "child_process";
 import { env } from "process";
 
-import VueDevTools from "vite-plugin-vue-devtools";
-
 const baseFolder =
   env.APPDATA !== undefined && env.APPDATA !== ""
     ? `${env.APPDATA}/ASP.NET/https`
@@ -46,6 +44,7 @@ export default defineConfig({
       "@workouts": path.resolve(`${path.resolve(__dirname, "./src/modules/workouts")}`),
       "@exercises": path.resolve(`${path.resolve(__dirname, "./src/modules/exercises")}`),
       "@shared": path.resolve(`${path.resolve(__dirname, "./src/modules/shared")}`),
+      "@auth": path.resolve(`${path.resolve(__dirname, "./src/modules/auth")}`),
       "@": path.resolve(__dirname, "./src"),
     },
   },
@@ -64,4 +63,3 @@ export default defineConfig({
     },
   },
 });
-

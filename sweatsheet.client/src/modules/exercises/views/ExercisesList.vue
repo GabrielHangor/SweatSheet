@@ -1,14 +1,5 @@
 <template>
-  <IonPage>
-    <IonHeader :translucent="true">
-      <IonToolbar>
-        <IonTitle>Exercises</IonTitle>
-      </IonToolbar>
-    </IonHeader>
-    <IonContent fullscreen>hui</IonContent>
-  </IonPage>
+  <h1>Exercises list</h1>
 </template>
 
-<script setup lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from "@ionic/vue";
-</script>
+<script setup lang="ts"></script>

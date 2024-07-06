@@ -1,6 +1,5 @@
 import WorkoutsApi from "@shared/api/workouts/WorkoutsApi";
 import { useInfiniteQuery } from "@tanstack/vue-query";
-import { Ref } from "vue";
 
 export default function useWorkoutsInfiniteQuery() {
   return useInfiniteQuery({

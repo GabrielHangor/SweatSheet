@@ -66,7 +66,7 @@ public static class AuthService
         return Results.Ok(
             new Dictionary<string, string>
             {
-                { "userName", currentUser.UserName ?? "" },
+                { "username", currentUser.UserName ?? "" },
                 { "userId", currentUser.Id },
                 { "role", userRoles.FirstOrDefault() ?? "" }
             }

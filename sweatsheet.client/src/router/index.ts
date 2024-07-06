@@ -1,5 +1,5 @@
-import { createRouter, createWebHistory } from "@ionic/vue-router";
 import MainLayout from "@shared/ui/layouts/MainLayout.vue";
+import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,6 +28,11 @@ const router = createRouter({
           component: () => import("@exercises/views/ExercisesList.vue"),
         },
       ],
+    },
+    {
+      path: "/login",
+      name: "login",
+      component: () => import("@auth/views/LoginPage.vue"),
     },
   ],
 });

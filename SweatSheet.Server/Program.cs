@@ -82,10 +82,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapFallbackToFile("/index.html");
-
 app.RegisterWorkoutEndpoints();
 app.RegisterExerciseEndpoints();
 app.RegisterAuthEndpoints();
+
+app.MapFallbackToFile("/index.html");
 
 app.Run();

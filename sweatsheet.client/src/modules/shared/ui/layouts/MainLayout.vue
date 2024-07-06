@@ -1,33 +1,17 @@
 <template>
-  <IonPage>
-    <IonTabs>
-      <IonRouterOutlet />
-      <Transition name="slide-down">
-        <IonTabBar v-show="showTabBar" slot="bottom" key="footer">
-          <IonTabButton v-for="tab in tabs" :key="tab.name" :tab="tab.name" :href="tab.path">
-            <IonIcon :icon="tab.icon" />
-            <IonLabel>{{ tab.name }}</IonLabel>
-          </IonTabButton>
-        </IonTabBar>
-      </Transition>
-    </IonTabs>
-  </IonPage>
+  <h1>main layout1</h1>
+  <router-view />
 </template>
 
 <script setup lang="ts">
-import { IonIcon, IonLabel, IonPage, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from "@ionic/vue";
-import { listOutline, barbellOutline, addCircleOutline } from "ionicons/icons";
-import { computed } from "vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
-const showTabBar = computed(() => (route.meta?.showTabBar as boolean) ?? true);
 
 const tabs = [
   {
     name: "Workouts",
     path: "/workouts",
-    icon: listOutline,
   },
   // {
   //   name: "Workout Creator",
@@ -37,7 +21,6 @@ const tabs = [
   {
     name: "Exercises",
     path: "/exercises",
-    icon: barbellOutline,
   },
 ];
 </script>

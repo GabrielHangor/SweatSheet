@@ -11,17 +11,16 @@ class WorkoutsApi extends ApiClient {
   }
 
   async getWorkouts({ page, size }: { page?: number; size?: number }) {
-    await new Promise((resolve) => setTimeout(resolve, DELAY));
     const { data } = await this.httpClient.get<PaginatedList<Workout>>("", {
       params: { page, size },
     });
-
+    await new Promise((resolve) => setTimeout(resolve, DELAY));
     return data;
   }
 
   async getWorkout(id: number) {
-    await new Promise((resolve) => setTimeout(resolve, DELAY));
     const { data } = await this.httpClient.get<Workout>(`${id}`);
+    await new Promise((resolve) => setTimeout(resolve, DELAY));
     return data;
   }
 
@@ -31,14 +30,14 @@ class WorkoutsApi extends ApiClient {
   }
 
   async updateWorkout(id: number, payload: WorkoutUpdateRequestParams) {
-    await new Promise((resolve) => setTimeout(resolve, DELAY));
     const { data } = await this.httpClient.put<Workout>(`/${id}`, payload);
+    await new Promise((resolve) => setTimeout(resolve, DELAY));
     return data;
   }
 
   async deleteWorkout(id: number) {
-    await new Promise((resolve) => setTimeout(resolve, DELAY));
     await this.httpClient.delete(`${id}`);
+    await new Promise((resolve) => setTimeout(resolve, DELAY));
   }
 }
 

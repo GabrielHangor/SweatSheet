@@ -1,9 +1,10 @@
 <template>
-  <IonApp>
-    <IonRouterOutlet />
-  </IonApp>
+  <k-app theme="ios" safe-areas>
+    <router-view />
+  </k-app>
 </template>
 
 <script setup lang="ts">
-import { IonApp, IonRouterOutlet } from "@ionic/vue";
+import { kApp } from "konsta/vue";
+import { RouterView } from "vue-router";
 </script>
