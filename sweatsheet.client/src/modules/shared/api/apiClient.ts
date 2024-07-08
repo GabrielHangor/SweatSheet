@@ -1,7 +1,7 @@
 import router from "@/router";
 import axios, { AxiosInstance, isAxiosError } from "axios";
 
-enum StatusCode {
+export enum StatusCode {
   BadRequest = 400,
   Unauthorized = 401,
   AccessDenied = 403,

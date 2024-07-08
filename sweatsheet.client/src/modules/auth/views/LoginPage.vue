@@ -5,27 +5,28 @@
       <k-block class="mt-[-40px] w-full">
         <k-list strong class="rounded-lg">
           <SWListInput
-            v-model="formModel.username"
+            v-model="username"
             label="Login"
             type="text"
             placeholder="Login"
             input-class="text-xl"
+            v-bind="usernameAttrs"
             :error="errors.username"
           />
           <SWListInput
-            v-model="formModel.password"
+            v-model="password"
             label="Password"
             type="password"
             placeholder="Password"
             input-class="text-xl"
+            v-bind="passwordAttrs"
             :error="errors.password"
           />
           <SWButton
             class="mt-3 rounded-t-none py-6 text-xl"
-            :disabled="isDisabled"
-            :is-loading="isLoading"
+            :is-loading="isSubmitting"
             tonal
-            @click="handleSubmit"
+            @click="onSubmit"
           >
             Log in
           </SWButton>
@@ -41,5 +42,11 @@ import SWButton from "@shared/ui/components/SWButton.vue";
 import SWListInput from "@shared/ui/components/SWListInput.vue";
 import { kBlock, kList, kNavbar, kPage } from "konsta/vue";
 
-const { formModel, isDisabled, isLoading, errors, handleSubmit } = useLoginForm();
+const {
+  formModel: { username, password },
+  formAttrs: { usernameAttrs, passwordAttrs },
+  isSubmitting,
+  errors,
+  onSubmit,
+} = useLoginForm();
 </script>

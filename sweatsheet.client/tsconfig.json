@@ -10,11 +10,12 @@
     "declaration": false,
     "moduleResolution": "Bundler",
     "isolatedModules": true,
+    "allowImportingTsExtensions": true,
     "noEmit": true,
+    "jsx": "preserve",
+    "strict": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "verbatimModuleSyntax": false,
-    "importHelpers": true,
     "target": "ESNext",
     "module": "esnext",
     "lib": [
@@ -25,6 +26,7 @@
     "noImplicitAny": true,
     "skipDefaultLibCheck": true,
     "noImplicitOverride": true,
+    "verbatimModuleSyntax": false,
     "baseUrl": ".",
     "paths": {
       "@workouts/*": [
@@ -44,12 +46,6 @@
       ],
     }
   },
-  "vueCompilerOptions": {
-    "target": "3.3",
-    "extensions": [
-      ".vue"
-    ]
-  },
   "exclude": [
     "node_modules/**",
     "src/**/*.spec.ts",
@@ -60,6 +56,7 @@
   "include": [
     "src/**/*",
     "src/**/*.ts",
+    "src/**/*.tsx",
     "src/**/*.vue"
   ],
   "references": [

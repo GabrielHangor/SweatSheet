@@ -1,41 +1,51 @@
+import { StatusCode } from "@shared/api/apiClient";
 import AuthApi from "@shared/api/auth/AuthApi";
+import { toTypedSchema } from "@vee-validate/zod";
 import { AxiosError } from "axios";
-import { computed, ref } from "vue";
+import { useForm } from "vee-validate";
+import { z } from "zod";
 
 export default function useLoginForm() {
-  const formModel = ref({ username: "", password: "" });
+  const schema = toTypedSchema(
+    z.object({
+      username: z.string().min(4, "Username must be at least 4 characters"),
+      password: z.string().min(6, "Password must be at least 6 characters"),
+    }),
+  );
 
-  const isDisabled = computed(() => {
-    return !formModel.value.username || !formModel.value.password;
+  const { handleSubmit, defineField, errors, isSubmitting, setErrors } = useForm({
+    validationSchema: schema,
+    initialValues: { username: "", password: "" },
   });
 
-  const isLoading = ref(false);
-  const errors = ref({ username: "", password: "" });
+  const [username, usernameAttrs] = defineField("username", (state) => ({
+    validateOnModelUpdate: state.validated,
+  }));
 
-  const handleSubmit = async () => {
+  const [password, passwordAttrs] = defineField("password", (state) => ({
+    validateOnModelUpdate: state.validated,
+  }));
+
+  const onSubmit = handleSubmit(async (values, actions) => {
     try {
-      errors.value = { username: "", password: "" };
-      isLoading.value = true;
       await new Promise((resolve) => setTimeout(resolve, 1000));
+      await AuthApi.signIn(values);
 
-      await AuthApi.signIn(formModel.value);
+      actions.resetForm();
     } catch (error: unknown) {
-      const axiosError = error as AxiosError;
+      const axiosError = error as AxiosError<string>;
 
-      if (axiosError.response?.status === 400) {
-        errors.value.password = "Incorrect username or password";
-        errors.value.username = "Incorrect username or password";
+      if (axiosError.response?.status === StatusCode.BadRequest) {
+        setErrors({ username: axiosError.response.data, password: axiosError.response.data });
       }
-    } finally {
-      isLoading.value = false;
     }
-  };
+  });
 
   return {
-    formModel,
-    isDisabled,
-    isLoading,
+    formModel: { username, password },
+    formAttrs: { usernameAttrs, passwordAttrs },
+    isSubmitting,
     errors,
-    handleSubmit,
+    onSubmit,
   };
 }
